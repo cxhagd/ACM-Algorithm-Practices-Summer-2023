@@ -1,0 +1,72 @@
+#include<iostream>
+#include<cstring>
+#include<cstdio>
+#include<cstdlib>
+#include<algorithm>
+int num;
+int sum[1001], lsum;
+int jc[51][1001], ljc[51];
+
+int max(int a, int b)
+{
+	if (a > b) {
+		return a;
+	}
+	else {
+		return b;
+	}
+}
+
+int main() {
+	scanf("%d", &num);
+	jc[1][1] = 1;
+	for (int i = 1; i <= num; i++) {
+		ljc[1] = 1;
+		int B[3];
+		int lb;
+		B[2] = i / 10;
+		B[1] = i % 10;
+		if (B[2] == 0) {
+			lb = 1;
+		}
+		else {
+			lb = 2;
+		}
+
+
+		for (int j = 1; j <= lb; j++) {
+			for (int k = 1; k <= ljc[i - 1]; k++) {
+				jc[i][j + k - 1] += B[j] * jc[i - 1][k];
+				jc[i][j + k] += jc[i][j + k - 1] / 10;
+				jc[i][j + k - 1] %= 10;
+				if (jc[i][j + k ] == 0) {
+					ljc[i] = j + k - 1;
+				}
+				else {
+					ljc[i] = j + k;
+				}
+			}
+			
+		}
+
+	}
+
+	for (int i = 1; i <= num; i++) {
+		for (int j = 1; j <= ljc[i]; j++) {
+			sum[j] += jc[i][j];
+			sum[j + 1] += sum[j] / 10;
+			sum[j] %= 10;
+			if (sum[j + 1] != 0) {
+				lsum = j + 1;
+			}
+			else {
+				lsum = j;
+			}
+		}
+	}
+	
+	for (int i = lsum; i > 0; i--) {
+		printf("%d", sum[i]);
+	}
+	
+}
